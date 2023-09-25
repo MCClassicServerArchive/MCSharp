@@ -7,15 +7,15 @@ using System.Threading;
 
 namespace MCSharp.Heartbeat
 {
-    public class MinecraftHeartbeat : Heartbeat
+    public class ClassiCubeHeartbeat : Heartbeat
     {
         
         public static int MissedBeats { get { return Instance.Attempts; } }
 
         static BackgroundWorker worker;
 
-        static MinecraftHeartbeat instance;
-        public static MinecraftHeartbeat Instance
+        static ClassiCubeHeartbeat instance;
+        public static ClassiCubeHeartbeat Instance
         {
             get
             {
@@ -37,7 +37,7 @@ namespace MCSharp.Heartbeat
         {
             if (instance == null)
             {
-                instance = new MinecraftHeartbeat();
+                instance = new ClassiCubeHeartbeat();
                 worker = new BackgroundWorker();
                 worker.DoWork += new DoWorkEventHandler(worker_DoWork);
                 worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(worker_RunWorkerCompleted);
@@ -55,15 +55,17 @@ namespace MCSharp.Heartbeat
             worker.RunWorkerAsync();
         }
 
-        public MinecraftHeartbeat ()
+        public ClassiCubeHeartbeat ()
         {
             _timeout = 30000; // Beat every 30 seconds
-            serverURL = "http://betacraft.uk/heartbeat.jsp";
+            serverURL = "http://www.classicube.net/server/heartbeat/";
+            Logger.Log(Server.salt, LogType.Information);
             staticPostVars = "port=" + Properties.ServerPort +
                              "&max=" + Properties.MaxPlayers +
                              "&name=" + Uri.EscapeDataString(Properties.ServerName) +
                              "&public=" + Properties.PublicServer +
-                             "&version=7";
+                             "&software=MCSharp "+ Uri.EscapeDataString(Server.Version) +
+                             "&web=true";
         }
 
         void UpdateHeartBeatPostVars()
@@ -74,7 +76,7 @@ namespace MCSharp.Heartbeat
             // Wait until Server.salt is not null or empty
             while (string.IsNullOrEmpty(Server.salt))
             {
-                System.Threading.Thread.Sleep(1000); // Wait for 1 second
+                System.Threading.Thread.Sleep(100);
             }
 
             postVars += "&salt=" + Uri.EscapeDataString(Server.salt);
@@ -134,7 +136,7 @@ namespace MCSharp.Heartbeat
                         string line = responseReader.ReadToEnd().Trim();
                         _hash = line.Substring(line.LastIndexOf('/') + 1);
                         externalURL = line;
-                        File.WriteAllText("externalurl.txt", externalURL);
+                        File.WriteAllText("classicubeurl.txt", externalURL);
 
                         // We have success, write to the file!
                         _attempts = 0;
@@ -146,8 +148,8 @@ namespace MCSharp.Heartbeat
             {
                 if (ex.Status == WebExceptionStatus.Timeout)
                 {
-                    Logger.Log("Timeout: minecraft.net", LogType.Debug);
-                    Logger.Log("Heartbeat Timed out: The minecraft.net website is probably down", LogType.Error);
+                    Logger.Log("Timeout: classicube.net", LogType.Debug);
+                    Logger.Log("Heartbeat Timed out: The classicube website is probably down", LogType.Error);
                     Logger.Log(ex.Message, LogType.ErrorMessage);
                 }
                 else
@@ -161,13 +163,13 @@ namespace MCSharp.Heartbeat
                             Logger.Log(externalURL, LogType.ErrorMessage);
                         }
                     }
-                    Logger.Log("Failed Heartbeat to minecraft.net: The status was " + ex.Status.ToString(), LogType.Error);
+                    Logger.Log("Failed Heartbeat to classicube.net: The status was " + ex.Status.ToString(), LogType.Error);
                     Logger.Log(ex.Message, LogType.ErrorMessage);
                 }
             }
             catch (Exception ex)
             {
-                Logger.Log("Error reporting to minecraft.net", LogType.Error);
+                Logger.Log("Error reporting to classicube.net", LogType.Error);
                 Logger.Log(ex.Message, LogType.ErrorMessage);
                 Logger.Log(serverURL, LogType.ErrorMessage);
                 Logger.Log(postVars, LogType.ErrorMessage);

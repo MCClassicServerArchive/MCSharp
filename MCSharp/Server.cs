@@ -111,7 +111,7 @@ namespace MCSharp
 
                     // Init Heartbeat
                     MinecraftHeartbeat.Init();
-                    WOMHeartbeat.Init();
+                    ClassiCubeHeartbeat.Init();
 
 
                     // No longer going to be served. Probably should only be done at very rare intervals anyways
