@@ -65,7 +65,7 @@ namespace MCSharp.Heartbeat
                              "&name=" + Uri.EscapeDataString(Properties.ServerName) +
                              "&public=" + Properties.PublicServer +
                              "&software=MCSharp "+ Uri.EscapeDataString(Server.Version) +
-                             "&web=true";
+                             "&web=false";
         }
 
         void UpdateHeartBeatPostVars()
