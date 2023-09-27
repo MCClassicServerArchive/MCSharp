@@ -286,7 +286,13 @@ namespace MCSharp
                         MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(Server.salt + name))).
                         Replace("-", "").ToLower().TrimStart('0'))
                     {
-                        if (ip != "127.0.0.1")
+                        if (verify != "--" && verify == BitConverter.ToString(
+
+                        MD5.Create().ComputeHash(Encoding.ASCII.GetBytes(Server.classicubesalt + name))).
+                        Replace("-", "").ToLower().TrimStart('0')){
+                            name += Properties.ClassiCubeSuffix;
+                        }
+                        else if (ip != "127.0.0.1")
                         {
                             Kick("Login failed! Try again."); return;
                         }

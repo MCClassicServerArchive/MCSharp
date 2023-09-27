@@ -59,7 +59,6 @@ namespace MCSharp.Heartbeat
         {
             _timeout = 30000; // Beat every 30 seconds
             serverURL = "http://www.classicube.net/server/heartbeat/";
-            Logger.Log(Server.salt, LogType.Information);
             staticPostVars = "port=" + Properties.ServerPort +
                              "&max=" + Properties.MaxPlayers +
                              "&name=" + Uri.EscapeDataString(Properties.ServerName) +
@@ -73,13 +72,13 @@ namespace MCSharp.Heartbeat
             postVars = staticPostVars;
             postVars += "&users=" + (Player.number);
 
-            // Wait until Server.salt is not null or empty
-            while (string.IsNullOrEmpty(Server.salt))
+            // Wait until Server.classicubesalt is not null or empty
+            while (string.IsNullOrEmpty(Server.classicubesalt))
             {
                 System.Threading.Thread.Sleep(100);
             }
 
-            postVars += "&salt=" + Uri.EscapeDataString(Server.salt);
+            postVars += "&salt=" + Uri.EscapeDataString(Server.classicubesalt);
         }
 
 

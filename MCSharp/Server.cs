@@ -70,6 +70,7 @@ namespace MCSharp
         public static List<string> jokerMessages = new List<string>();
 
         public static string salt = "";
+        public static string classicubesalt = "";
 
         public static Server s;
 

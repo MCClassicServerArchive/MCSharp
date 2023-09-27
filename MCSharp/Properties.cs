@@ -18,7 +18,7 @@ namespace MCSharp
         public static bool AllowWorldChat = true;
         public static bool GuestGoto = false;
         public static bool DebugEnabled = false;
-
+        public static string ClassiCubeSuffix = "+";
         public static bool BetaMode = false;
 
         public static string MainLevel = "main";
@@ -53,7 +53,7 @@ namespace MCSharp
             string rndchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             Random rnd = new Random();
             for (int i = 0; i < 16; ++i) { Server.salt += rndchars[rnd.Next(rndchars.Length)]; }
-
+            for (int i = 0; i < 16; ++i) { Server.classicubesalt += rndchars[rnd.Next(rndchars.Length)]; }
             if (File.Exists("server.properties"))
             {
                 string[] lines = File.ReadAllLines("server.properties");
@@ -149,6 +149,16 @@ namespace MCSharp
                                 catch
                                 {
                                     Logger.Log("max-players is invalid! Setting it back to default.", LogType.Error);
+                                }
+                                break;
+                            case "classicube-suffix":
+                                if (!ValidString(value, "![]:.,{}~-+()?_/") || value == "")
+                                {
+                                    ClassiCubeSuffix = value;
+                                }
+                                else
+                                {
+                                    Logger.Log("classicube-suffix is invalid! Setting it back to default.", LogType.Error);
                                 }
                                 break;
                             case "max-maps":
